@@ -111,12 +111,12 @@ def submit(data_folder_path, submission_file):
             if checked[start_z, start_y, start_x]:
                 continue
 
-            block = np.zeros((depth, height, width), dtype=np.uint8)
+            chunk = np.zeros((depth, height, width), dtype=np.uint8)
 
             stack = deque()
             stack.append((start_z, start_y, start_x))
 
-            block[start_z, start_y, start_x] = checked[start_z, start_y, start_x] = True
+            chunk[start_z, start_y, start_x] = checked[start_z, start_y, start_x] = True
 
             n = 1
             while stack:
@@ -133,16 +133,16 @@ def submit(data_folder_path, submission_file):
                     if not candidate[next_z, next_y, next_x]:
                         continue
 
-                    if block[next_z, next_y, next_x]:
+                    if chunk[next_z, next_y, next_x]:
                         continue
 
-                    block[next_z, next_y, next_x] = checked[next_z, next_y, next_x] = True
+                    chunk[next_z, next_y, next_x] = checked[next_z, next_y, next_x] = True
                     stack.append((next_z, next_y, next_x))
 
                     n += 1
 
             if n >= BLOCK_THRESHOLD:
-                result |= block
+                result |= chunk
 
                 print(f"n = {n}\tratio = {np.count_nonzero(result) / (depth * height * width)}")
 
